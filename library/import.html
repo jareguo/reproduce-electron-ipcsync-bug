@@ -1,0 +1,27 @@
+<dom-module id="large-image">
+    <template>
+        <content></content>
+        <img src="library://large-image.png" />
+        <script>
+            //    for (var i = 0; i < 10000000; ++i) {
+            //    }
+            //    var Remote = require('remote');
+            //    var remoteObject = Remote.getGlobal('remoteObject');
+            //    for (var i = 0; i < 1000; ++i) {
+            //        remoteObject.add(10, 10000);
+            //    }
+            console.log("I am imported!");
+            for (var j = 0; j < 10; ++j) {
+                var link = document.createElement('link');
+                link.rel = 'import';
+                link.href = "library://import2.html?" + Math.random();
+                document.head.appendChild(link);
+            }
+        </script>
+    </template>
+    <script>
+        Polymer({
+            is: 'large-image',
+        });
+    </script>
+</dom-module>

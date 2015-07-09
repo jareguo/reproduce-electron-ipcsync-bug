@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="bower_components/polymer/polymer.html">
+
+    <link rel="import" href="elements/large-image.html">
+    <link rel="import" href="elements/small-image.html">
+
+</head>
+<body>
+
+
+    <h2> I am in a WebView </h2>
+
+    <script>
+        var Ipc = require('ipc');
+        var largeArray = [];
+        for(var i = 0; i < 1000; ++i) {
+            largeArray.push(i);
+        }
+
+        Ipc.on('query-hierarchy', function (event) {
+            console.log("reply query slowly ~~~");
+            var Remote = require('remote');
+            var remoteObject = Remote.getGlobal('remoteObject');
+            for (var i = 0; i < 100; ++i) {
+                remoteObject.add(10, 10000000);
+                remoteObject.prop = largeArray;
+            }
+        });
+
+        setInterval(function () {
+            for (var i = 0; i < 100; ++i) {
+                Ipc.sendToHost('reply-query-hierarchy', i);
+            }
+        }, 1);
+    </script>
+
+    <large-image></large-image>
+    <small-image></small-image>
+
+</body>
+</html>

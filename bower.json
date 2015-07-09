@@ -1,0 +1,15 @@
+{
+  "name": "",
+  "ignore": [
+    "**/.*",
+    "3rd",
+    "bower_components",
+    "ext",
+    "node_modules",
+    "test"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.0.5"
+  },
+  "devDependencies": {}
+}

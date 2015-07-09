@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="bower_components/polymer/polymer.html">
+    <title>Hello World!</title>
+</head>
+<body onkeydown="onKeyDown(event)">
+
+    <h1>Hello World!</h1>
+    We are using io.js
+    <script>document.write(process.version)</script>
+    and electron
+    <script>document.write(process.versions['atom-shell'])</script>.
+
+    Press space to import html please.
+
+    <webview id="view" src="button.html" nodeintegration disablewebsecurity autosize="on" tabindex="-1"></webview>
+
+    <script>
+        var Ipc = require('ipc');
+
+        // keep sending ipc
+        var webview = document.getElementById("view");
+        webview.addEventListener('did-finish-load', function () {
+            webview.openDevTools();
+            setInterval(function () {
+                for (var i = 0; i < 100; ++i) {
+                    webview.send('query-hierarchy', i);
+                }
+            }, 1);
+        });
+
+        Ipc.on('reply-query-hierarchy', function () {
+
+        });
+
+        // keep calling remote object
+        function callingRemoteObject () {
+            //setTimeout(callingRemoteObject, 1);
+            var Remote = require('remote');
+            var remoteObject = Remote.getGlobal('remoteObject');
+            //for (var i = 0; i < 1000; ++i) {
+                remoteObject.add(10, 10000000000);
+            //}
+        }
+        //callingRemoteObject();
+    </script>
+
+    <script>
+        function doImport () {
+//                if (locked) {
+//                    console.error('Already locked, see the call stack please');
+//                    return;
+//                }
+//                else {
+//                    // LOCK !!
+//                    locked = true;
+//                }
+
+            console.log('Starts importing');
+
+            var link = document.createElement('link');
+            link.rel = 'import';
+            link.onerror = link.onload = function () {
+
+                console.log('Stop importing');
+
+                locked = false;
+                if (link.import) {
+                    var el = document.createElement('large-image');
+                    document.body.appendChild(el);
+                }
+            };
+            link.href = "library://import.html";
+            document.body.appendChild(link);
+
+            //callingRemoteObject();
+            for (var i = 0; i < 100; ++i) {
+                webview.send('query-hierarchy', i);
+            }
+        }
+
+        function onKeyDown(event) {
+            var spaceDown = event.which === 32;
+            if (spaceDown) {
+                //Ipc.send('import');
+                event.preventDefault();
+                event.stopPropagation();
+
+                doImport();
+            }
+        }
+
+        var locked = false;
+
+        Ipc.on('import', doImport)
+
+    </script>
+
+</body>
+</html>
